@@ -61,7 +61,7 @@ The same MATLAB syntax can be used for bivariate functions. However, the only di
 ```
 pwfitTest = pwfit(Xdata,{Ydata,Zdata},'poly21',[2.0,3.5,5.0],'optimized');
 ```
-This will results in  the following piecewise fit approximation when plotted:
+This will result in the following piecewise fit approximation when plotted:
 <img src="images/bivarPwFitOptimizedBp.png">
 
 Note that the breakpoints for bivariate functions only divide the function along the x-axis. Therefore, increasing the number of breakpoints might not always improve the accuracy of the fit.  
