@@ -1,0 +1,389 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <!--
+This HTML is auto-generated from an M-file.
+To make changes, update the M-file and republish this document.
+      -->
+      <title>Getting Started</title>
+      <meta name="generator" content="MATLAB 7.8">
+      <meta name="date" content="2011-11-18">
+      <meta name="m-file" content="sam_demo"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head>
+   <body>
+      <div class="content">
+         <h1>disperse.m</h1>
+         <!--introduction-->
+         <p>Sam Hallman</p><pre> code written: 26 May 2010
+ html written: 18 Nov 2011</pre><p>Demonstration of the DISPERSE function. Oftentimes when using Matlab we find ourselves having to perform a series of repetitive
+            assignments from some kind of array, e.g., a=A(1); b=A(2); c=A(3); . . . etc. Inevitably we ask ourselves, is there a way
+            to do this more simply? DISPERSE is syntactic sugar for performing these kinds of tasks with a single function call.
+         </p>
+         <p>The following examples illustrate the behavior of DISPERSE on different collection classes.</p>
+         <!--/introduction-->
+         <h2>Contents</h2>
+         <div>
+            <ul>
+               <li><a href="#1">Vectors</a></li>
+               <li><a href="#3">Matrices</a></li>
+               <li><a href="#5">N-D arrays</a></li>
+               <li><a href="#7">RGB images (special case)</a></li>
+               <li><a href="#9">Cells</a></li>
+               <li><a href="#11">Structs</a></li>
+            </ul>
+         </div>
+         <h2>Vectors<a name="1"></a></h2>
+         <p>Grab elements of vectors</p><pre class="codeinput">foo = rand(1,4)
+[a b c d] = disperse(foo)
+</pre><pre class="codeoutput">
+foo =
+
+    0.4094    0.3654    0.8578    0.9957
+
+
+a =
+
+    0.4094
+
+
+b =
+
+    0.3654
+
+
+c =
+
+    0.8578
+
+
+d =
+
+    0.9957
+
+</pre><p>Can grab a subset if you like</p><pre class="codeinput">v = rand(1,5)
+[a b c] = disperse(v([1 4 5]))
+</pre><pre class="codeoutput">
+v =
+
+    0.9096    0.7282    0.6020    0.0011    0.2741
+
+
+a =
+
+    0.9096
+
+
+b =
+
+    0.0011
+
+
+c =
+
+    0.2741
+
+</pre><h2>Matrices<a name="3"></a></h2>
+         <p>Grab columns of a matrix</p><pre class="codeinput">A = rand(2)
+[c1 c2] = disperse(A)
+</pre><pre class="codeoutput">
+A =
+
+    0.3656    0.2508
+    0.2083    0.7516
+
+
+c1 =
+
+    0.3656
+    0.2083
+
+
+c2 =
+
+    0.2508
+    0.7516
+
+</pre><p>Transpose if you want rows</p><pre class="codeinput">[r1 r2] = disperse(A')
+</pre><pre class="codeoutput">
+r1 =
+
+    0.3656
+    0.2508
+
+
+r2 =
+
+    0.2083
+    0.7516
+
+</pre><h2>N-D arrays<a name="5"></a></h2>
+         <p>disperse generalizes to arrays of arbitrary dimension</p><pre class="codeinput">A = rand(5,3,4,9,7);
+<span class="comment">% pick off A(:,:,:,:,1) and A(:,:,:,:,2)</span>
+[a b] = disperse(A);
+</pre><p>it worked:</p><pre class="codeinput">whos <span class="string">A</span> <span class="string">a</span> <span class="string">b</span>
+isequal(a, A(:,:,:,:,1))
+isequal(b, A(:,:,:,:,2))
+</pre><pre class="codeoutput">  Name      Size            Bytes  Class     Attributes
+
+  A         5-D             30240  double              
+  a         4-D              4320  double              
+  b         4-D              4320  double              
+
+
+ans =
+
+     1
+
+
+ans =
+
+     1
+
+</pre><h2>RGB images (special case)<a name="7"></a></h2>
+         <p>The techniques of the previous section are especially handy for RGB images:</p><pre class="codeinput"><span class="comment">% Grab the R, G, and B color channels</span>
+im = imread(<span class="string">'street1.jpg'</span>);
+[r g b] = disperse(im);
+</pre><p>it worked:</p><pre class="codeinput">whos <span class="string">im</span> <span class="string">r</span> <span class="string">g</span> <span class="string">b</span>
+isequal(r, im(:,:,1))
+isequal(g, im(:,:,2))
+isequal(b, im(:,:,3))
+</pre><pre class="codeoutput">  Name        Size                Bytes  Class    Attributes
+
+  b         480x640              307200  uint8              
+  g         480x640              307200  uint8              
+  im        480x640x3            921600  uint8              
+  r         480x640              307200  uint8              
+
+
+ans =
+
+     1
+
+
+ans =
+
+     1
+
+
+ans =
+
+     1
+
+</pre><h2>Cells<a name="9"></a></h2>
+         <p>Grab elements of cells</p><pre class="codeinput">c = { <span class="string">'sam'</span>, -1, rand(5) }
+[c1 c2 c3] = disperse(c)
+</pre><pre class="codeoutput">
+c = 
+
+    'sam'    [-1]    [5x5 double]
+
+
+c1 =
+
+sam
+
+
+c2 =
+
+    -1
+
+
+c3 =
+
+    0.2945    0.0056    0.9591    0.9123    0.1125
+    0.6334    0.0572    0.8658    0.1883    0.6698
+    0.5971    0.0029    0.2624    0.4064    0.2496
+    0.7556    0.5436    0.4880    0.2552    0.6699
+    0.6972    0.7148    0.4085    0.7605    0.3863
+
+</pre><p>You can go further</p><pre class="codeinput">c = { <span class="string">'foo'</span> {} ; [1,2;3,4] <span class="string">'bar'</span> }
+[a b] = disperse(c)
+</pre><pre class="codeoutput">
+c = 
+
+    'foo'              {}
+    [2x2 double]    'bar'
+
+
+a = 
+
+    'foo'
+    [2x2 double]
+
+
+b = 
+
+    {}
+    'bar'
+
+</pre><h2>Structs<a name="11"></a></h2>
+         <p>Grab elements of structure arrays</p><pre class="codeinput">s = struct(<span class="string">'strings'</span>, {<span class="string">'sam'</span>,<span class="string">'hello'</span>}, <span class="string">'lengths'</span>, [3 5])
+[a b] = disperse(s)
+</pre><pre class="codeoutput">
+s = 
+
+1x2 struct array with fields:
+    strings
+    lengths
+
+
+a = 
+
+    strings: 'sam'
+    lengths: [3 5]
+
+
+b = 
+
+    strings: 'hello'
+    lengths: [3 5]
+
+</pre><p class="footer"><br>
+            Published with MATLAB&reg; 7.8<br></p>
+      </div>
+      <!--
+##### SOURCE BEGIN #####
+%% disperse.m
+% Sam Hallman
+%
+%   code written: 26 May 2010
+%   html written: 18 Nov 2011
+%
+% Demonstration of the DISPERSE function. Oftentimes when using Matlab we
+% find ourselves having to perform a series of repetitive assignments from
+% some kind of array, e.g., a=A(1); b=A(2); c=A(3); . . . etc. Inevitably
+% we ask ourselves, is there a way to do this more simply? DISPERSE is
+% syntactic sugar for performing these kinds of tasks with a single
+% function call.
+%
+% The following examples illustrate the behavior of DISPERSE on different
+% collection classes.
+
+
+%% Vectors
+% Grab elements of vectors
+foo = rand(1,4)
+[a b c d] = disperse(foo)
+
+%%
+% Can grab a subset if you like
+v = rand(1,5)
+[a b c] = disperse(v([1 4 5]))
+
+%% Matrices
+% Grab columns of a matrix
+A = rand(2)
+[c1 c2] = disperse(A)
+
+%%
+% Transpose if you want rows
+[r1 r2] = disperse(A')
+
+%% N-D arrays
+% disperse generalizes to arrays of arbitrary dimension
+A = rand(5,3,4,9,7);
+% pick off A(:,:,:,:,1) and A(:,:,:,:,2)
+[a b] = disperse(A);
+
+%%
+% it worked:
+whos A a b
+isequal(a, A(:,:,:,:,1))
+isequal(b, A(:,:,:,:,2))
+
+    
+%% RGB images (special case)
+% The techniques of the previous section are especially handy for RGB
+% images:
+
+% Grab the R, G, and B color channels
+im = imread('street1.jpg');
+[r g b] = disperse(im);
+
+%%
+% it worked:
+whos im r g b
+isequal(r, im(:,:,1))
+isequal(g, im(:,:,2))
+isequal(b, im(:,:,3))
+
+%% Cells
+% Grab elements of cells
+
+c = { 'sam', -1, rand(5) }
+[c1 c2 c3] = disperse(c)
+
+%%
+% You can go further
+
+c = { 'foo' {} ; [1,2;3,4] 'bar' }
+[a b] = disperse(c)
+
+%% Structs
+% Grab elements of structure arrays
+
+s = struct('strings', {'sam','hello'}, 'lengths', [3 5])
+[a b] = disperse(s)
+##### SOURCE END #####
+-->
+   </body>
+</html>
