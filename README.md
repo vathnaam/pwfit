@@ -31,7 +31,7 @@ and to plot the piecewise fit, respectively.
 >> feval(pwfitobj, 2.2)
 
 ans = 
-  9.1756 
+  	9.1756 
   
 >> print(pwfitobj, ‘%0.3g’)
 
@@ -41,3 +41,28 @@ ans =
   
 >> plot(pwfitobj)
 ```
+<img src="images/univarSingleFit.png">
+
+In order to approximate the data using piecewise function, you will need to specify the fixed breakpoints as follows:
+```
+pwfitobj = pwfit(xdata,ydata,‘poly2’,[1,2,3]); 
+```
+This will result in the following piecewise fit approximation when plotted:
+<img src="images/univarPwFit.png">
+
+To optimize the location of the breakpoint(s) to improve accuracy of the fit, this can be invoked as follows:
+```
+pwfitobj = pwfit(xdata,ydata,‘poly2’,[1,2,3],‘optimized’);
+```
+This will results in  the following piecewise fit approximation when plotted:
+<img src="images/univarPwFitOptimizedBp.png">
+
+The same MATLAB syntax can be used for bivariate functions. However, the only difference is that the `Xdata`, `Ydata`, and `Zdata` are matrices, and both `Ydata` and `Zdata` are supplied to together in a cell with curly brackets. For instance:
+```
+pwfitTest = pwfit(Xdata,{Ydata,Zdata},'poly21',[2.0,3.5,5.0],'optimized');
+```
+This will results in  the following piecewise fit approximation when plotted:
+<img src="images/bivarPwFitOptimizedBp.png">
+
+Note that the breakpoints for bivariate functions only divide the function along the x-axis. Therefore, increasing the number of breakpoints might not always improve the accuracy of the fit.  
+
